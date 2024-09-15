@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dynamic Form</title>
+  <style>
+   body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f0f0f0;
+    }
+    form {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      margin: auto;
+    }
+    input[type="text"] {
+      padding: 8px;
+      margin: 8px 0;
+      width: calc(100% - 16px);
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      margin-top: 10px;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+    }
+    button[type="button"] {
+      background-color: #f44336;
+      color: white;
+      margin-left: 8px;
+    }
+    button[type="button"]:first-of-type {
+      background-color: #008CBA;
+      color: white;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+  <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    const { useState } = React;
+    function DynamicForm() {
+      const [hobbies, setHobbies] = useState(['']);
+      const handleInputChange = (index, event) => {
+        const updatedHobbies = [...hobbies];
+        updatedHobbies[index] = event.target.value;
+        setHobbies(updatedHobbies);
+      };
+      const addHobbyField = () => {
+        setHobbies([...hobbies, '']);
+      };
+      const removeHobbyField = (index) => {
+        const updatedHobbies = hobbies.filter((_, i) => i !== index);
+        setHobbies(updatedHobbies);
+      };
+      const handleSubmit = (event) => {
+        event.preventDefault();
+        console.log(hobbies);
+      };
+      return (
+        <form onSubmit={handleSubmit}>
+          {hobbies.map((hobby, index) => (
+            <div key={index}>
+              <input
+                type="text"
+                value={hobby}
+                onChange={(e) => handleInputChange(index, e)}
+                placeholder={`Hobby ${index + 1}`}
+              />
+              {index > 0 && (
+                <button type="button" onClick={() => removeHobbyField(index)}>
+                  Remove
+                </button>
+              )}
+            </div>
+          ))}
+          <button type="button" onClick={addHobbyField}>Add Hobby</button>
+          <button type="submit">Submit</button>
+        </form>
+      );
+    }
+    ReactDOM.render(<DynamicForm />, document.getElementById('root'));
+  </script>
+</body>
+</html>
